@@ -1,0 +1,2 @@
+# HeraDB
+A simple DB
