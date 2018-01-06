@@ -45,7 +45,7 @@ func (self *node) root() *node {
 }
 
 // put inserts a key and value
-func (self *node) put(key byte) {
+func (self *node) put(key []byte) {
     root := self.root()
     if root.isFull() {
         newRoot := NewNode(false)
@@ -60,7 +60,18 @@ func (self *node) put(key byte) {
 
 func (self *node) insert(key []byte) {
     // Find insertion index.
-    index := sort.Search(len(self.inodes), func(i int) bool { return bytes.Compare(self.inodes.key, key) != -1})
+    index := sort.Search(len(self.inodes), func(i int) bool { return bytes.Compare(self.inodes[i].key, key) != -1})
+    if self.isLeaf {            
+        self.inodes = append(self.inodes, &inode{})
+        copy(self.inodes[index+1:], self.inodes[index:])
+        copy(self.inodes[index].key, key)
+    } else {
+        if self.children[index].isFull() {
+            self.split(index)
+            if bytes.Compare(self.inodes[index].key, key) == -1 { index++}
+        }
+        self.children[index].insert(key)
+    }
 }
 
 func (self *node) split(index int) {
