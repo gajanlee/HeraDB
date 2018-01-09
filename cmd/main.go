@@ -18,10 +18,10 @@ func main() {
 	root.Put([]byte("lee7"))
 	root.Put([]byte("lee8"))
 	root.Put([]byte("lee9"))
-	root.Put([]byte("lee9"))
-	root.Put([]byte("lee9"))
-	root.Put([]byte("lee9"))
-	root.Put([]byte("lee9"))
+	root.Put([]byte("leea"))
+	root.Put([]byte("leeb"))
+	root.Put([]byte("leec"))
+	root.Put([]byte("leed"))
 
 	fmt.Printf("%s", root)
 }

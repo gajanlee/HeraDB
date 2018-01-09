@@ -35,7 +35,7 @@ func (n *node)Format(depth int) string {
 			format = n.children[0].Format(depth+1)
 		}
 		for i, inode := range n.inodes {
-			format += string(inode.key) + "\n"
+			format += strings.Repeat("--", depth) + string(inode.key) + "\n"
 			if n.children[i+1] != nil { format += n.children[i+1].Format(depth+1)}
 		}
 	}
