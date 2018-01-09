@@ -14,6 +14,9 @@ func main() {
 	root.Put([]byte("lee3"))
 	root.Put([]byte("lee4"))
 	root.Put([]byte("lee5"))
+	root.Put([]byte("lee6"))
+	root.Put([]byte("lee7"))
+	//root.Put([]byte("lee8"))
 
 	fmt.Printf("%s", root)
 }
