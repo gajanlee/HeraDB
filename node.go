@@ -46,16 +46,12 @@ func (n *node)String() string {
 	return n.root().Format(0)
 }
 
-func NewNode(isLeaf bool) *node {
+func newNode(isLeaf bool) *node {
 	return &node{isLeaf: isLeaf, children: make([]*node, 2*_t), inodes: make([]inode, 2*_t-1)}
 }
 
 func CreateBTree() *node{
-	return NewNode(true)
-}
-
-func (n *node)Put(key []byte) {
-	n.root().preInsert(key)
+	return newNode(true)
 }
 
 func (n *node) root() *node{
@@ -68,7 +64,7 @@ func (n *node) root() *node{
 func (n *node)preInsert(key []byte) {
 	root := n.root()
 	if root.isFull() {
-		newRoot := NewNode(false)
+		newRoot := newNode(false)
 		root.parent = newRoot
 		newRoot.children[0] = root
 		newRoot.split(0)
@@ -104,8 +100,8 @@ func (n *node)split(i int) {
 }
 
 func (n *node)splitTwo() (*node, *node, inode) {
-	nodel := NewNode(n.isLeaf)
-	noder := NewNode(n.isLeaf)
+	nodel := newNode(n.isLeaf)
+	noder := newNode(n.isLeaf)
 
 	copy(nodel.inodes[:_t-1], n.inodes[:_t-1]); nodel.keycount = _t-1
 	copy(noder.inodes[:_t-1], n.inodes[_t:]); noder.keycount = _t-1
