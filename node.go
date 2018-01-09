@@ -46,6 +46,14 @@ func (n *node)String() string {
 	return n.root().Format(0)
 }
 
+func (n *node)Put(key []byte) {
+    n.root().preInsert(key)
+}
+
+func (n *node)Del(key []byte) {
+    n.root().Get(key).del(key)
+}
+
 func newNode(isLeaf bool) *node {
 	return &node{isLeaf: isLeaf, children: make([]*node, 2*_t), inodes: make([]inode, 2*_t-1)}
 }
@@ -59,6 +67,29 @@ func (n *node) root() *node{
 		return n
 	}
 	return n.parent.root()
+}
+
+func (n *node)del(key []byte) *node {
+    return nil
+}
+
+func (n *node)Get(key []byte) *node{
+    return n.root().get(key)
+}
+
+func (n *node)get(key []byte) *node {
+    for i, inode := range n.inodes {
+        switch bytes.Compare(key, inode.key) {
+        case 1:
+            if n.isLeaf {
+                return nil
+            } else {
+                return n.children[i].get(key)
+            }
+        case 0: return n
+        }
+    }
+    return nil
 }
 
 func (n *node)preInsert(key []byte) {

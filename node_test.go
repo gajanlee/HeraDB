@@ -23,3 +23,17 @@ func TestCreateBTree(t *testing.T) {
 		t.Fatalf("exp=<foo>; got=<%s>", k)
 	}
 }
+
+func TestGetNode(t *testing.T) {
+	n := CreateBTree()
+	n.Put([]byte("baz"))
+	n.Put([]byte("foo"))
+	n.Put([]byte("bar"))
+	n.Put([]byte("foo"))
+	if nd := n.Get([]byte("test")); nd != nil {
+		t.Fatalf("exp=nil; got=<%s>", nd)
+	}
+	if nd := n.Get([]byte("baz")); nd == nil {
+		t.Fatalf("exp=not nil; got=<%s>", nd)
+	}
+}
