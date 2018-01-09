@@ -97,7 +97,7 @@ func (n *node)insert(key []byte) {
 
 // node's ith child is full, but n is not full interior node.
 func (n *node)split(i int) {
-	copy(n.children[i+1:], n.children[i:])
+	copy(n.children[i+2:], n.children[i+1:])
 	copy(n.inodes[i+1:], n.inodes[i:])
 	n.children[i], n.children[i+1], n.inodes[i] = n.children[i].splitTwo()
 	n.keycount++
@@ -109,6 +109,10 @@ func (n *node)splitTwo() (*node, *node, inode) {
 
 	copy(nodel.inodes[:_t-1], n.inodes[:_t-1]); nodel.keycount = _t-1
 	copy(noder.inodes[:_t-1], n.inodes[_t:]); noder.keycount = _t-1
+	if !n.isLeaf {
+		copy(nodel.children[:_t], n.children[:_t])
+		copy(noder.children[:_t], n.children[_t:])
+	}
 	return nodel, noder, n.inodes[_t-1]
 }
 
