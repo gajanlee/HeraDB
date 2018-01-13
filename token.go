@@ -16,10 +16,12 @@ var (
     _TOKEN_ERROR    = Error.new("hahah")
 )
 
+
+
 func expect() string {
-    
+
 }
 
 func getNextToken() string {
-    
+
 }
