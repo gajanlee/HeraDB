@@ -4,6 +4,7 @@ import (
 	"strings"
 	"bytes"
 	"sort"
+	"fmt"
 )
 
 type node struct {
@@ -21,6 +22,14 @@ type inode struct {
 const (
 	_t = 2
 )
+
+func (in *inode) reset() {
+	in.key = nil
+}
+
+func (in *inode) isNIL() bool {
+	return in.key == nil
+}
 
 func (n *node)Format(depth int) string {
 	var format string
@@ -70,6 +79,15 @@ func (n *node) root() *node{
 }
 
 func (n *node)del(key []byte) *node {
+	// now this node should be deleted
+	if n.isLeaf {
+		for _, in := range n.inodes {
+			fmt.Print(in.key)
+			if !in.isNIL() && bytes.Compare(key, in.key) == 0{
+				in.reset()
+			}
+		}
+	}
     return nil
 }
 

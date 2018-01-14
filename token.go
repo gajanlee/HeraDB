@@ -1,5 +1,7 @@
 package HeraDB
 
+import "errors"
+
 // token.go is used to tokenize the input sentence.
 
 const (
@@ -13,15 +15,15 @@ const (
 )
 
 var (
-    _TOKEN_ERROR    = Error.new("hahah")
+    _TOKEN_ERROR    = errors.New("hahah")
 )
 
 
 
 func expect() string {
-
+    return ""
 }
 
 func getNextToken() string {
-
+    return ""
 }

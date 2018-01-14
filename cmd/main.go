@@ -4,24 +4,15 @@ package main
 import (
 	. ".."
 	"fmt"
+	"strconv"
 )
 
 func main() {
-	root := NewNode(true)
-	root.Put([]byte("lee"))
-	root.Put([]byte("lee1"))
-	root.Put([]byte("lee2"))
-	root.Put([]byte("lee3"))
-	root.Put([]byte("lee4"))
-	root.Put([]byte("lee5"))
-	root.Put([]byte("lee6"))
-	root.Put([]byte("lee7"))
-	root.Put([]byte("lee8"))
-	root.Put([]byte("lee9"))
-	root.Put([]byte("leea"))
-	root.Put([]byte("leeb"))
-	root.Put([]byte("leec"))
-	root.Put([]byte("leed"))
-
-	fmt.Printf("%s", root)
+	n := CreateBTree()
+	for x := 0; x < 10; x++ {
+		n.Put([]byte(strconv.Itoa(x)))
+	}
+	//fmt.Printf("%s", n)
+	n.Del([]byte("2"))
+	fmt.Printf("%s", n)
 }

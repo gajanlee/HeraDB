@@ -1,7 +1,10 @@
 package HeraDB
 
 import "testing"
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func TestCreateBTree(t *testing.T) {
 	n := CreateBTree()
@@ -36,4 +39,14 @@ func TestGetNode(t *testing.T) {
 	if nd := n.Get([]byte("baz")); nd == nil {
 		t.Fatalf("exp=not nil; got=<%s>", nd)
 	}
+}
+
+func TestDelNode(t *testing.T) {
+	n := CreateBTree()
+	for x := 0; x < 10; x++ {
+		n.Put([]byte(strconv.Itoa(x)))
+	}
+	//fmt.Printf("%s", n)
+	n.Del([]byte("2"))
+	fmt.Printf("%s", n)
 }
