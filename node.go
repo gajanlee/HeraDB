@@ -4,7 +4,6 @@ import (
 	"strings"
 	"bytes"
 	"sort"
-	"fmt"
 )
 
 type node struct {
@@ -60,7 +59,8 @@ func (n *node)Put(key []byte) {
 }
 
 func (n *node)Del(key []byte) {
-    n.root().Get(key).del(key)
+    nd, i := n.Get(key)
+    nd.del(key, i)
 }
 
 func newNode(isLeaf bool) *node {
@@ -78,36 +78,33 @@ func (n *node) root() *node{
 	return n.parent.root()
 }
 
-func (n *node)del(key []byte) *node {
+func (n *node)del(key []byte, index int) *node {
 	// now this node should be deleted
 	if n.isLeaf {
-		for _, in := range n.inodes {
-			fmt.Print(in.key)
-			if !in.isNIL() && bytes.Compare(key, in.key) == 0{
-				in.reset()
-			}
-		}
+		n.inodes[index].reset()
 	}
     return nil
 }
 
-func (n *node)Get(key []byte) *node{
-    return n.root().get(key)
+func (n *node)Get(key []byte) (*node, int) {
+	return n.root().get(key)
 }
 
-func (n *node)get(key []byte) *node {
-    for i, inode := range n.inodes {
-        switch bytes.Compare(key, inode.key) {
-        case 1:
-            if n.isLeaf {
-                return nil
-            } else {
-                return n.children[i].get(key)
-            }
-        case 0: return n
-        }
-    }
-    return nil
+func (n *node)get(key []byte) (*node, int) {
+	index := sort.Search(n.keycount, func(i int) bool { return bytes.Compare(n.inodes[i].key, key) != -1})
+	if index >= n.keycount && !n.isLeaf{
+		return n.children[index].get(key)
+	} else if index >= n.keycount && n.isLeaf {
+		return nil, 0
+	}
+	switch bytes.Compare(n.inodes[index].key, key) {
+	case 0: return n, index
+	case -1: if n.isLeaf { return nil, 0}
+		return n.children[index+1].get(key)
+	case 1: if n.isLeaf { return nil, 0}
+		return n.children[index].get(key)
+	}
+	return nil, 0
 }
 
 func (n *node)preInsert(key []byte) {

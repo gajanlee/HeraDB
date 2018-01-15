@@ -50,3 +50,7 @@ func TestDelNode(t *testing.T) {
 	n.Del([]byte("2"))
 	fmt.Printf("%s", n)
 }
+
+func BenchmarkCreateBTree(b *testing.B) {
+
+}
