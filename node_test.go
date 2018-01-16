@@ -33,10 +33,10 @@ func TestGetNode(t *testing.T) {
 	n.Put([]byte("foo"))
 	n.Put([]byte("bar"))
 	n.Put([]byte("foo"))
-	if nd := n.Get([]byte("test")); nd != nil {
+	if nd, _ := n.Get([]byte("test")); nd != nil {
 		t.Fatalf("exp=nil; got=<%s>", nd)
 	}
-	if nd := n.Get([]byte("baz")); nd == nil {
+	if nd, _ := n.Get([]byte("baz")); nd == nil {
 		t.Fatalf("exp=not nil; got=<%s>", nd)
 	}
 }
@@ -51,6 +51,16 @@ func TestDelNode(t *testing.T) {
 	fmt.Printf("%s", n)
 }
 
-func BenchmarkCreateBTree(b *testing.B) {
-
+func TestDelete(t *testing.T) {
+	n := CreateBTree()
+	for x := 'A'; x <= 'Z'; x++ {
+		n.Put( []byte(string(x)))
+	}
+	for x := 'a'; x < 'z'; x++ {
+		n.Put( []byte(string(x)))
+	}
+	// I will delete v, as a  interior node
+	fmt.Printf("%s", n)
+	///n.Del([]byte("2"))
+	//fmt.Printf("%s", n)
 }

@@ -60,7 +60,7 @@ func (n *node)Put(key []byte) {
 
 func (n *node)Del(key []byte) {
     nd, i := n.Get(key)
-    if nd != nil { nd.del(key, i)}
+    if nd != nil { nd.del(i)}
 }
 
 func newNode(isLeaf bool) *node {
@@ -78,10 +78,19 @@ func (n *node) root() *node{
 	return n.parent.root()
 }
 
-func (n *node)del(key []byte, index int) *node {
+func (n *node)del(index int) {
 	// now this node should be deleted
-	if n.isLeaf { n.inodes[index].reset()}
-    return nil
+	if n.isLeaf { n.inodes[index].reset(); return }
+	if n.children[index].keycount > _t {
+		preIndex := n.children[index].keycount - 1
+		preNode := n.children[index].inodes[preIndex]
+
+		n.inodes[index] = preNode				// copy 前驱结点 to current node
+		n.children[index].del(preIndex)			// recursively delete
+		// copy children pointer?
+	} else if n.children[index+1].keycount > _t {
+
+	}
 }
 
 func (n *node)Get(key []byte) (*node, int) {
