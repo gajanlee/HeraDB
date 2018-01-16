@@ -60,7 +60,7 @@ func (n *node)Put(key []byte) {
 
 func (n *node)Del(key []byte) {
     nd, i := n.Get(key)
-    nd.del(key, i)
+    if nd != nil { nd.del(key, i)}
 }
 
 func newNode(isLeaf bool) *node {
@@ -80,9 +80,7 @@ func (n *node) root() *node{
 
 func (n *node)del(key []byte, index int) *node {
 	// now this node should be deleted
-	if n.isLeaf {
-		n.inodes[index].reset()
-	}
+	if n.isLeaf { n.inodes[index].reset()}
     return nil
 }
 
