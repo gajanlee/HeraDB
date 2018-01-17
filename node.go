@@ -22,6 +22,21 @@ const (
 	_t = 2
 )
 
+// appendINode must ensure node is not full
+func (n *node) appendINode(in inode) {
+	n.inodes[n.keycount] = in
+	n.keycount++
+}
+
+func (n *node) mergeNode(nd *node) {
+	for x := 0; x < nd.keycount; x++ {
+		n.appendINode(nd.inodes[x])
+
+		n.keycount++
+
+	}
+}
+
 func (in *inode) reset() {
 	in.key = nil
 }
@@ -80,17 +95,39 @@ func (n *node) root() *node{
 
 func (n *node)del(index int) {
 	// now this node should be deleted
-	if n.isLeaf { n.inodes[index].reset(); return }
-	if n.children[index].keycount > _t {
+	if n.isLeaf { n.inodes[index].reset(); n.keycount--; return }
+	if n.children[index].keycount >= _t {
 		preIndex := n.children[index].keycount - 1
 		preNode := n.children[index].inodes[preIndex]
 
 		n.inodes[index] = preNode				// copy 前驱结点 to current node
 		n.children[index].del(preIndex)			// recursively delete
 		// copy children pointer?
-	} else if n.children[index+1].keycount > _t {
+	} else if n.children[index+1].keycount >= _t {
+		backNode := n.children[index+1].inodes[0]
+		n.inodes[index] = backNode
+		n.children[index+1].del(0)
+	} else {
+		key := n.inodes[index]
+		copy(n.children[index:], n.children[index+1:])
+		copy(n.inodes[index:], n.inodes[index+1:])
+		n.keycount--
+		nodey := n.children[index]
+		nodez := n.children[index+1]
 
+		i := nodey.keycount
+		nodey.appendINode(key)
+		for x := 0; x < nodez.keycount; x++ {
+			nodey.children[nodey.keycount] = nodez.children[x]
+			nodey.appendINode(nodez.inodes[x])
+		}
+		nodey.children[nodey.keycount] = nodez.children[nodez.keycount]
+		// nodey.mergeNode(nodez)
+		nodey.del(i)		// recursively delete key(index i)
 	}
+
+
+
 }
 
 func (n *node)Get(key []byte) (*node, int) {
